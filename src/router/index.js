@@ -17,21 +17,23 @@ NProgress.configure({ showSpinner: false }) // NProgress Configuration
 /**
  * 基础路由
  *
-* hidden: true                   if `hidden:true` will not show in the sidebar(default is false)
-* alwaysShow: true               if set true, will always show the root menu, whatever its child routes length
-*                                if not set alwaysShow, only more than one route under the children
-*                                it will becomes nested mode, otherwise not show the root menu
-* redirect: noredirect           if `redirect:noredirect` will no redirct in the breadcrumb
-* name:'router-name'             the name is used by <keep-alive> (must set!!!)
+* hidden: true                   如果' hidden:true '不会显示在侧边栏中(默认为false)
+* alwaysShow: true               如果设置为true，将总是显示根菜单，不管它的子路由长度是多少
+*                                如果没有设置alwaysShow，子路由下只能有一个以上的路由
+*                                它将变成嵌套模式，否则不显示根菜单
+* redirect: noredirect           如果' redirect:noredirect '在breadcrumb中没有重定向
+* name:'router-name'             该名称由<keep-alive>使用(必须设置!!)
 * meta : {
-    roles: ['admin','editor']     will control the page roles (you can set multiple roles)
-    title: 'title'               the name show in submenu and breadcrumb (recommend set)
-    icon: 'svg-name'             the icon show in the sidebar,
-    noCache: true                if true ,the page will no be cached(default is false)
+    roles: ['admin','editor']    将控制页面角色(您可以设置多个角色)
+    title: 'title'               在子菜单和面包屑中显示的名称(建议设置)
+    icon: 'svg-name'             图标显示在侧边栏，
+    noCache: true                如果为true，页面将不会被缓存(默认为false)
   }
 **/
+// 静态路由  所有用户都可以进行访问的界面
 export const constantRouterMap = [
   {
+    // 登录
     path: '/login',
     component: _import('dashboard/pages/login'),
     hidden: true
@@ -67,14 +69,15 @@ const router = new Router({
   routes: constantRouterMap
 })
 
+// 路由前置守卫
 router.beforeEach((to, from, next) => {
-  NProgress.start() // start progress bar
+  NProgress.start() // 开启进度条
   if (getToken()) {
     // determine if there has token
     /* has token */
     if (to.path === '/login') {
       next({ path: '/' })
-      NProgress.done() // if current page is dashboard will not trigger	afterEach hook, so manually handle it
+      NProgress.done() // 关闭进度条
     } else {
       if (store.getters.roles.length === 0) {
         // 判断当前用户是否已拉取完user_info信息
@@ -82,11 +85,11 @@ router.beforeEach((to, from, next) => {
           .dispatch('GetUserInfo')
           .then(res => {
             // 拉取user_info
-            const roles = res.data.roles // note: roles must be a array! such as: ['editor','develop']
+            const roles = res.data.roles // note: 角色必须是一个数组! 如:['编辑','发展']
             store.dispatch('GenerateRoutes', { roles }).then(() => {
               // 根据roles权限生成可访问的路由表
               router.addRoutes(store.getters.addRouters) // 动态添加可访问路由表
-              next({ ...to, replace: true }) // hack方法 确保addRoutes已完成 ,set the replace: true so the navigation will not leave a history record
+              next({ ...to, replace: true }) // hack方法 确保addRoutes已完成 ,设置replace: true，这样导航将不会留下历史记录
             })
           })
           .catch(() => {
@@ -106,13 +109,14 @@ router.beforeEach((to, from, next) => {
       next()
     } else {
       next('/login') // 否则全部重定向到登录页
-      NProgress.done() // if current page is login will not trigger afterEach hook, so manually handle it
+      NProgress.done() // 如果当前页面是登录，将不会触发后，每个钩子，所以手动处理它
     }
   }
 })
 
+// 后置路由守卫
 router.afterEach(() => {
-  NProgress.done() // finish progress bar
+  NProgress.done() // 关闭进度条 finish progress bar
 })
 
 /**
