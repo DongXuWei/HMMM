@@ -6,6 +6,10 @@ import NProgress from 'nprogress'
 import Layout from '@/module-dashboard/pages/layout'
 import { getToken } from '@/utils/auth'
 
+// 导入动态路由
+// import heimamianmian from '@/module-hmmm/router'
+// console.log(...heimamianmian)
+
 // 定义
 const _import = require('./import_' + process.env.NODE_ENV) // 懒加载 导包
 const whiteList = ['/login', '/authredirect'] // 白名单 无需跳转
@@ -60,14 +64,26 @@ export const constantRouterMap = [
   }
 ]
 
+// 定义一个动态路由变量
+// 导出变量 后面做权限的时候会用到
+export const asyncRouters = [
+  // heimamianmian
+]
+
 /**
  * 配置路由
  **/
+
+// const routerAll = [...asyncRouters, ...constantRouterMap]
 const router = new Router({
-  // mode: 'history', // require service support
+  // mode: 'history',
   scrollBehavior: () => ({ y: 0 }),
+
+  // 循环的路由表
+  // routes: routerAll
   routes: constantRouterMap
 })
+console.log(...constantRouterMap)
 
 // 路由前置守卫
 router.beforeEach((to, from, next) => {
