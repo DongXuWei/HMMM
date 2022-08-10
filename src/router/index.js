@@ -8,7 +8,6 @@ import { getToken } from '@/utils/auth'
 
 // 导入动态路由
 // import heimamianmian from '@/module-hmmm/router'
-// console.log(...heimamianmian)
 
 // 定义
 const _import = require('./import_' + process.env.NODE_ENV) // 懒加载 导包
@@ -83,7 +82,7 @@ const router = new Router({
   // routes: routerAll
   routes: constantRouterMap
 })
-console.log(...constantRouterMap)
+// console.log(...constantRouterMap)
 
 // 路由前置守卫
 router.beforeEach((to, from, next) => {
