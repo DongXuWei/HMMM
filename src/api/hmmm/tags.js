@@ -6,3 +6,7 @@
  *
  * 标签有关的接口：自己写吧~~  已经被张老师删了 ^_^
  */
+import { createAPI } from '@/utils/request'
+
+// 标签列表
+export const getTagsList = query => createAPI('/tags', 'get', query)
