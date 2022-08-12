@@ -6,3 +6,7 @@
  *
  * 题库有关的接口：自己写吧~~  已经被张老师删了 ^_^
  */
+
+import { createAPI } from '@/utils/request.js'
+// 获取题库列表
+export const getRandomsList = () => createAPI('/questions/randoms?page=1&pagesize=10', 'GET')

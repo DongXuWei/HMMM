@@ -7,9 +7,19 @@
  * 企业管理
  */
 
+<<<<<<< Updated upstream
 import createAPI from '@/utils/request'
 
 export const list = data => createAPI('/comapnys', 'post')
+=======
+import { createAPI } from '@/utils/request'
+
+export const list = data => createAPI('/comapnys', 'post', data)
+
+// 获取企业
+export const getCompanyListAPI = () => createAPI('/companys', 'GET')
+
+>>>>>>> Stashed changes
 export const add = data => createAPI('/comapnys', 'post', data)
 export const update = data =>
   createAPI(`/comapnys/${data.userId}`, 'get', data)
