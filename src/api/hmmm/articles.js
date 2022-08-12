@@ -6,8 +6,6 @@
  *
  * 文章
  */
-<<<<<<< Updated upstream
-
 import { createAPI } from '@/utils/request'
 
 // 文章列表
@@ -32,5 +30,3 @@ export const remove = data =>
 
 // 文章状态
 export const changeState = data => createAPI(`/articles/${data.id}/${data.state}`, 'get')
-=======
->>>>>>> Stashed changes

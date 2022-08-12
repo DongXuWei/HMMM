@@ -6,7 +6,7 @@
  *
  * 学科有关的接口：自己写吧~~  已经被张老师删了 ^_^
  */
-<<<<<<< Updated upstream
+
 import { createAPI } from '@/utils/request'
 
 // 学科列表
@@ -23,10 +23,6 @@ export const delSubject = data => createAPI(`/subjects/${data.id}`, 'delete', da
 export const updateSubject = data => createAPI(`/subjects/${data.id}`, 'put', data)
 // 学科简单列表
 export const getSimpleList = query => createAPI('/subjects/simple', 'get', query)
-=======
-
-import { createAPI } from '@/utils/request'
 
 // 获取学科简单列表
 export const simple = () => createAPI('/subjects/simple', 'GET')
->>>>>>> Stashed changes
