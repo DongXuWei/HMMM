@@ -37,7 +37,7 @@ export default {
       type: Object,
       default: () => {
         return {
-          minHeight: '100px'
+          minHeight: '200px'
         }
       }
     },
@@ -205,7 +205,14 @@ export default {
   }
 }
 </script>
-<style>
+<style lang="scss">
+.el-form-item__content{
+  .ql-toolbar{
+    height: 40px;
+    display: flex;
+    align-items: center;
+  }
+}
 .ql-snow .ql-tooltip[data-mode="link"]::before {
   content: "请输入链接地址:";
 }
