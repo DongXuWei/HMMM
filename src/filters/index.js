@@ -159,3 +159,9 @@ export function toThousandslsFilter (num) {
     .toString()
     .replace(/^-?\d+/g, m => m.replace(/(?=(?!\b)(\d{3})+$)/g, ','))
 }
+
+// 获取数据
+export async function acqData (fn) {
+  const { data } = fn()
+  return data
+}
