@@ -160,6 +160,11 @@ export function toThousandslsFilter (num) {
     .replace(/^-?\d+/g, m => m.replace(/(?=(?!\b)(\d{3})+$)/g, ','))
 }
 
+// 获取数据
+export async function acqData (fn) {
+  const { data } = fn()
+  return data
+}
 export function dateForm (val) {
   const dt = new Date(val)
   const y = dt.getFullYear()
