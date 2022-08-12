@@ -7,9 +7,13 @@
  * 企业管理
  */
 
-import createAPI from '@/utils/request'
+import { createAPI } from '@/utils/request'
 
-export const list = data => createAPI('/comapnys', 'post')
+export const list = data => createAPI('/comapnys', 'post', data)
+
+// 获取企业
+export const getCompanyListAPI = () => createAPI('/companys', 'GET')
+
 export const add = data => createAPI('/comapnys', 'post', data)
 export const update = data =>
   createAPI(`/comapnys/${data.userId}`, 'get', data)

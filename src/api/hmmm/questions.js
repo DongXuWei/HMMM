@@ -63,3 +63,7 @@ export const getQuestionDetail = (id) => {
 export const delQuestions = (id) => {
   return createAPI(`/questions/${id}`, 'DELETE')
 }
+
+// import { createAPI } from '@/utils/request.js'
+// 获取题库列表
+export const getRandomsList = () => createAPI('/questions/randoms?page=1&pagesize=10', 'GET')

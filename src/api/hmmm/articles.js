@@ -7,20 +7,32 @@
  * 文章
  */
 
-import createAPI from '@/utils/request'
+// // 文章列表
+// export const list = data => createAPI('/artilces', 'get')
+
+// // 文章简单列表
+// export const simple = data => createAPI('/artilces/simple', 'post', data)
+
+// // 文章详情
+// export const detail = data =>
+//   createAPI(`/articles/${data.detailId}`, 'post', data)
+
+// // 文章添加
+// export const add = data => createAPI('/artilces', 'post', data)
+import { createAPI } from '@/utils/request'
 
 // 文章列表
-export const list = data => createAPI('/artilces', 'get')
+export const list = data => createAPI('/articles', 'get', data)
 
 // 文章简单列表
-export const simple = data => createAPI('/artilces/simple', 'post', data)
+export const simple = data => createAPI('/articles/simple', 'post', data)
 
 // 文章详情
 export const detail = data =>
-  createAPI(`/articles/${data.detailId}`, 'post', data)
+  createAPI(`/articles/${data.id}`, 'post', data)
 
 // 文章添加
-export const add = data => createAPI('/artilces', 'post', data)
+export const add = data => createAPI('/articles', 'post', data)
 
 // 文章修改
 export const update = data => createAPI(`/articles/${data.id}`, 'get', data)
@@ -30,4 +42,8 @@ export const remove = data =>
   createAPI(`/article/${data.detailId}`, 'delete', data)
 
 // 文章状态
-export const changeState = data => createAPI(`/articles/${data.state}`, 'get')
+// export const changeState = data => createAPI(`/articles/${data.state}`, 'get')
+//   createAPI(`/articles/${data.id}`, 'delete', data)
+
+// 文章状态
+export const changeState = data => createAPI(`/articles/${data.id}/${data.state}`, 'get')
