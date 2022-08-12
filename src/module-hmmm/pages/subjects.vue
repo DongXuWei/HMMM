@@ -146,8 +146,14 @@ export default {
     },
     // 修改学科
     async editSub (id) {
-      console.log(id)
+      if (this.$refs.addSubject.formData.isFrontDisplay === 1) {
+        this.$refs.addSubject.formData.isFrontDisplay = true
+      } else {
+        this.$refs.addSubject.formData.isFrontDisplay = false
+      }
+      // console.log(id)
       // 先获取数据  再弹层 优化 避免空白一三而过
+      // 通过id得到的对象里面 data才是我们formData所对应的 需要解构出来
       const { data } = await getDetailSubject(id)
       console.log(data)
       this.$refs.addSubject.formData = data
@@ -162,6 +168,9 @@ export default {
       }).catch(error => error)
       try {
         await delSubject(row)
+        // const results = await delSubject(row)
+        // console.log(results)
+        this.$message.success('删除成功')
         this.getSubjectList()
       } catch (e) {
         this.$message.error('删除失败!')

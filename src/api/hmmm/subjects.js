@@ -18,3 +18,7 @@ export const addSubject = data => createAPI('/subjects', 'post', data)
 export const getDetailSubject = id => createAPI(`/subjects/${id}`, 'get')
 // 删除学科
 export const delSubject = data => createAPI(`/subjects/${data.id}`, 'delete', data)
+// 修改学科
+export const updateSubject = data => createAPI(`/subjects/${data.id}`, 'put', data)
+// 学科简单列表
+export const getSimpleList = query => createAPI('/subjects/simple', 'get', query)
