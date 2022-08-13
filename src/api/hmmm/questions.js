@@ -65,14 +65,19 @@ export const delQuestions = (id) => {
 }
 
 // 获取题库列表
-
-export const getRandomsList = (page) => createAPI(`/questions/randoms?page=${page.page}&pagesize=${page.pagesize}`, 'GET')
+export const getRandomsList = (page) => createAPI(`/questions/randoms?page=${page.page}&pagesize=${page.pagesize}&keyword=${page.keyword}`, 'GET')
 
 // 删除题库列表
-export const delRandomsById = (id) => createAPI(`/questions/randoms/${id}`, 'DELETE')
+export const delRandomsById = id => createAPI(`/questions/randoms/${id},'DELETE`)
+// export const delRandomsById = id => createAPI(`/questions/randoms/${id}`, 'DELETE')
+//                          = id => createAPI(`/questions/randoms/${id},'DELETE`)
 
-// export const getRandomsList = () => createAPI('/questions/randoms?page=1&pagesize=10', 'GET')
+// 预览题目详情接口
+export function getPreview (id) {
+  return createAPI(`/questions/${id}`, 'get')
+}
+// 预览题组的数据
+export const perviewQuestionAPI = id => createAPI(`/questions/${id}`, 'GET')
 
 // 上下架 的问题
-
 export const editPublishState = (id, stateNum) => createAPI(`/questions/choice/${id}/${stateNum}`, 'POST')
