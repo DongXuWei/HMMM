@@ -65,7 +65,13 @@ export const delQuestions = (id) => {
 }
 
 // 获取题库列表
-export const getRandomsList = () => createAPI('/questions/randoms?page=1&pagesize=10', 'GET')
+
+export const getRandomsList = (page) => createAPI(`/questions/randoms?page=${page.page}&pagesize=${page.pagesize}`, 'GET')
+
+// 删除题库列表
+export const delRandomsById = (id) => createAPI(`/questions/randoms/${id}`, 'DELETE')
+
+// export const getRandomsList = () => createAPI('/questions/randoms?page=1&pagesize=10', 'GET')
 
 // 上下架 的问题
 
