@@ -64,6 +64,9 @@ export const delQuestions = (id) => {
   return createAPI(`/questions/${id}`, 'DELETE')
 }
 
-// import { createAPI } from '@/utils/request.js'
 // 获取题库列表
 export const getRandomsList = () => createAPI('/questions/randoms?page=1&pagesize=10', 'GET')
+
+// 上下架 的问题
+
+export const editPublishState = (id, stateNum) => createAPI(`/questions/choice/${id}/${stateNum}`, 'POST')
