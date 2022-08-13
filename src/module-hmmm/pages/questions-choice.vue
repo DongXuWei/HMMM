@@ -390,8 +390,8 @@ export default {
         page: 1,
         counts: 0,
         // 当前页限制数据数量
-        pagesize: 10,
-        chkState: ''
+        pagesize: 10
+
       }
     }
   },
@@ -412,6 +412,7 @@ export default {
       debugger
       this.tableData = data.items
       this.pageInfo.counts = data.counts
+      delete this.pageInfo.chkState
     },
 
     //
