@@ -47,7 +47,15 @@
         <el-table :data="list" style="width: 100%">
           <el-table-column type="index" label="序号" width="80">
           </el-table-column>
-          <el-table-column prop="title" label="文章标题" width="400">
+          <el-table-column label="文章标题" width="400">
+            <template slot-scope="scope">
+              <span>{{ scope.row.title }}</span>
+              <a class="el-icon-film" style="color:blue;font-size: 18px;" v-show="scope.row.videoURL" @click="openVideo"></a>
+              <div class="mask" v-if="videoState == true" @click="closeVideo"></div>
+              <div class="videomasks" v-if="videoState == true">
+              <video :src="`${scope.row.videoURL}`" controls autoplay width="100%" height="100%"></video>
+              </div>
+            </template>
           </el-table-column>
           <el-table-column prop="visits" label="阅读数" width="173">
           </el-table-column>
@@ -60,10 +68,10 @@
           </el-table-column>
           <el-table-column label="操作" width="180">
             <template slot-scope="scope">
-              <el-button type="text" size="small">预览</el-button>
-              <el-button type="text" size="small">禁用</el-button>
-              <el-button type="text" size="small" @click="editArticles(scope.row)">修改</el-button>
-              <el-button type="text" size="small" @click="removeArticles(scope.row)">删除</el-button>
+              <el-button type="text" size="medium" @click="previewArticles(scope.row)">预览</el-button>
+              <el-button type="text" size="medium" @click="changeState(scope.row)">{{scope.row.state ? '禁用' : '启用'}}</el-button>
+              <el-button type="text" size="medium" :disabled="scope.row.state === 0" @click="editArticles(scope.row)">修改</el-button>
+              <el-button type="text" size="medium" :disabled="scope.row.state === 0" @click="removeArticles(scope.row)">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -81,16 +89,18 @@
         >
         </el-pagination>
       </div>
-      <articles-add :show-dialog.sync="showDialog"></articles-add>
+      <articles-add ref="addArt" :show-dialog.sync="showDialog" @addArt="addArticles"></articles-add>
+      <articles-preview ref="preArt" :showdialogVisible.sync="dialogVisible"></articles-preview>
     </el-card>
   </div>
 </template>
 
 <script>
-import { list, remove } from '../../api/hmmm/articles'
+import { list, remove, changeState } from '../../api/hmmm/articles'
 import articlesAdd from '../components/articles-add.vue'
+import articlesPreview from '../components/articles-preview.vue'
 export default {
-  components: { articlesAdd },
+  components: { articlesAdd, articlesPreview },
   data () {
     return {
       keyword: '',
@@ -101,7 +111,11 @@ export default {
         counts: 0
       },
       list: [],
-      showDialog: false
+      filterList: [],
+      showDialog: false,
+      textState: '',
+      dialogVisible: false,
+      videoState: false
     }
   },
   created () {
@@ -109,17 +123,29 @@ export default {
   },
   methods: {
     onSearch () {
-      console.log('search!')
+      if (this.keyword === '' && this.state === '') {
+        this.getList()
+      } else if (this.keyword !== '' && this.state === '') {
+        this.list = this.filterList.filter(item => item.title.includes(this.keyword))
+      } else if (this.keyword === '' && this.state !== '') {
+        this.list = this.filterList.filter(item => item.state + '' === this.state)
+      } else if (this.keyword !== '' && this.state !== '') {
+        this.list = this.filterList.filter(item => item.title.includes(this.keyword) && item.state + '' === this.state)
+      }
+      this.page.counts = this.list.length
+      console.log(this.state)
     },
     onClear () {
-      console.log('clear!')
+      this.keyword = ''
+      this.state = ''
     },
     // 获取文章列表
     async getList () {
       const { data } = await list(this.page)
+      this.filterList = data.items
       this.list = data.items
       this.page.counts = data.counts
-      console.log(data)
+      // console.log(this.list)
     },
     // 分页尺寸变化
     handleSizeChange (val) {
@@ -136,9 +162,9 @@ export default {
     // 状态值显示转换
     showState (row) {
       if (row.state === 0) {
-        return '禁用'
+        return '已禁用'
       } else if (row.state === 1) {
-        return '启用'
+        return '已启用'
       }
     },
     // 删除文章列表
@@ -147,9 +173,9 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-      }).then(() => {
-        remove(data)
-        this.getList()
+      }).then(async () => {
+        await remove(data)
+        await this.getList()
         this.$message({
           type: 'success',
           message: '删除成功!'
@@ -161,11 +187,31 @@ export default {
         })
       })
     },
-    addArticles () {
+    // 新增文章
+    addArticles (data) {
+      this.getList()
       this.showDialog = true
     },
-    editArticles () {
-
+    // 编辑文章
+    editArticles (data) {
+      this.$refs.addArt.getDetail(data)
+      this.showDialog = true
+    },
+    // 预览文章
+    previewArticles (data) {
+      this.$refs.preArt.getDetail(data)
+      this.dialogVisible = true
+    },
+    async changeState (data) {
+      data.state = data.state ? 0 : 1
+      await changeState(data)
+      this.getList()
+    },
+    openVideo () {
+      this.videoState = true
+    },
+    closeVideo () {
+      this.videoState = false
     }
   }
 }
@@ -178,5 +224,22 @@ export default {
 .pagination {
   margin-top: 20px;
   text-align: right;
+}
+.mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  background-color:rgba(0, 0, 0, 0.05);
+}
+.videomasks {
+  width: 800px;
+  height: 600px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-10%,-50%)
 }
 </style>

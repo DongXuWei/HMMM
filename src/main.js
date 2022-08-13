@@ -20,9 +20,8 @@ import dashboard from '@/module-dashboard/' // 面板
 import base from '@/module-manage/' // 用户管理
 import hmmm from '@/module-hmmm/' // 黑马面面
 
-
 import VueVideoPlayer from 'vue-video-player'
- 
+
 // require videojs style
 import 'video.js/dist/video-js.css'
 import 'vue-video-player/src/custom-theme.css'

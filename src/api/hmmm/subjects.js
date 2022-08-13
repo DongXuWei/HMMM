@@ -22,7 +22,5 @@ export const delSubject = data => createAPI(`/subjects/${data.id}`, 'delete', da
 // 修改学科
 export const updateSubject = data => createAPI(`/subjects/${data.id}`, 'put', data)
 // 学科简单列表
-export const getSimpleList = query => createAPI('/subjects/simple', 'get', query)
-
-// 获取学科简单列表
-export const simple = () => createAPI('/subjects/simple', 'GET')
+// export const getSimpleList = query => createAPI('/subjects/simple', 'get', query)
+export const getSimpleList = () => createAPI('/subjects/simple', 'get')

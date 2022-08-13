@@ -28,14 +28,13 @@ export const list = data => createAPI('/articles', 'get', data)
 export const simple = data => createAPI('/articles/simple', 'post', data)
 
 // 文章详情
-export const detail = data =>
-  createAPI(`/articles/${data.id}`, 'post', data)
+export const detail = data => createAPI(`/articles/${data.id}`, 'get', data)
 
 // 文章添加
 export const add = data => createAPI('/articles', 'post', data)
 
 // 文章修改
-export const update = data => createAPI(`/articles/${data.id}`, 'get', data)
+export const update = data => createAPI(`/articles/${data.id}`, 'put', data)
 
 // 文章删除
 export const remove = data =>
@@ -46,4 +45,4 @@ export const remove = data =>
 //   createAPI(`/articles/${data.id}`, 'delete', data)
 
 // 文章状态
-export const changeState = data => createAPI(`/articles/${data.id}/${data.state}`, 'get')
+export const changeState = data => createAPI(`/articles/${data.id}/${data.state}`, 'post', data)

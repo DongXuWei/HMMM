@@ -1,11 +1,11 @@
 <template>
   <div class="pagination">
     <!-- 分页组件 -->
+    <!-- :hide-on-single-page="true" -->
      <el-pagination
       background
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
-      :hide-on-single-page="true"
       :current-page="currentPage4"
       :page-sizes="[10, 20, 30, 40]"
       :page-size="Number(page.pagesize)"

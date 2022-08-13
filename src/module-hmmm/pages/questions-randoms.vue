@@ -9,7 +9,7 @@
               <el-input
                 style="width: 300px"
                 placeholder="根据编号搜索"
-                v-model="iptVal"
+                v-model="page.keyword"
               ></el-input>
             </el-form-item>
             <el-form-item class="formitem">
@@ -26,7 +26,7 @@
             >数据一共 <strong>{{ page.counts }}</strong> 条
           </el-alert>
           <!-- table表格 -->
-          <el-table :data="filterList" style="width: 100%">
+          <el-table :data="dataList" style="width: 100%">
             <el-table-column
               prop="id"
               label="编号"
@@ -50,9 +50,15 @@
               width="186px"
             >
               <template v-slot="{ row }">
-                <el-link :underline="false" style="color: #409eff">
-                  {{ row.questionIDs }}</el-link
+                <el-link
+                  :underline="false"
+                  style="color: #409eff"
+                  v-for="(item, index) in row.questionIDs"
+                  :key="index"
+                  @click="openDiolog(item.id)"
                 >
+                  {{ item.number }}
+                </el-link>
               </template>
             </el-table-column>
             <el-table-column
@@ -104,17 +110,26 @@
         </el-card>
       </el-col>
     </el-row>
+    <!-- 弹框 -->
+    <previewQuestion
+      ref="previewQuestion"
+      :questionId="questionId"
+      :dialogVisible="showDialog"
+      @closeDiolog="showDialog = false"
+    ></previewQuestion>
   </div>
 </template>
 
 <script>
 import { getRandomsList, delRandomsById } from '@/api/hmmm/questions.js'
 import PaginationPage from '@/module-hmmm/components/pagination-page.vue'
-import { difficulty } from '@/api/hmmm/constants.js'
+import { questionType } from '@/api/hmmm/constants.js'
+import previewQuestion from '@/module-hmmm/components/question-Diolog.vue'
 import { Message } from 'element-ui'
 export default {
   components: {
-    PaginationPage
+    PaginationPage,
+    previewQuestion
   },
   mounted () {
     // console.log(getRandomsList())
@@ -125,27 +140,14 @@ export default {
       page: {
         counts: 0,
         page: 1,
-        pagesize: 10
+        pagesize: 10,
+        keyword: '' // 输入框的内容
       },
-      iptVal: '', // 输入框的内容
       dataList: [], // 列表数组
-      // filterList: []// 过滤后的数据
       questionList: [], // 试题数组
-      questionType: '' // 题型
-      // difficulty
-    }
-  },
-  computed: {
-    // 过滤数组
-    filterList: {
-      get () {
-        return this.dataList
-      },
-      set (val) {
-        if (this.iptVal.trim() === '') {
-          return this.dataList
-        }
-      }
+      questionType: '', // 题型
+      questionId: '',
+      showDialog: false // 弹窗
     }
   },
   methods: {
@@ -154,69 +156,63 @@ export default {
       try {
         const { data } = await getRandomsList(this.page)
         console.log(data)
-        this.dataList = data.items // 赋值整个列表数组
+        this.dataList.splice(0)
+        this.dataList.push(...data.items)// 赋值整个列表数组
 
         // 遍历获取题目编号
-        this.dataList.forEach((item) => {
-          let str = ''
-          item.questionIDs.forEach((obj) => {
-            str += obj.number
-            // console.log(obj.number)
-          })
-          item.questionIDs = str
-        })
+        // this.dataList.forEach((item) => {
+        //   const arr = []
+        //   item.questionIDs.forEach((obj) => {
+        //     arr.push(obj.number)
+        //     // console.log(obj.number)
+        //   })
+        //   item.questionIDs = arr
+        // })
 
         // 枚举题型
-        difficulty.forEach((item) => {
-          console.log(item)
-          console.log(this.dataList)
-          this.dataList.forEach(obj => {
+        questionType.forEach((item) => {
+          // console.log(item)
+          // console.log(this.dataList)
+          this.dataList.forEach((obj) => {
             if (item.value === Number(obj.questionType)) {
               obj.questionType = item.label
             }
           })
         })
 
-        this.page = {
-          page: data.page,
-          pagesize: data.pagesize,
-          counts: data.counts
-        } // 赋值page页
+        this.page.counts = data.counts
       } catch (error) {
         console.log(error)
       }
     },
-    // 删除的接口
-    async delRandomsById (id) {
-      await delRandomsById(id)
+    // 点击题目打开弹窗
+    async openDiolog (id) {
+      this.showDialog = true
+      // 请求数据
+      await this.$refs.previewQuestion.perviewQuestion(id)
     },
     // 搜索的点击按钮
     search () {
-      this.filterList = this.dataList.filter((item) =>
-        item.id.includes(this.iptVal)
-      )
-      // console.log(this.filterList)
+      // if (this.page.keyword === '') return this.getRandomsList()
+      this.getRandomsList()
     },
     // 重置
     resetForm () {
-      this.iptVal = ''
+      this.page.keyword = ''
     },
     // 删除
     async del (id) {
-      // console.log(id)
-      // 根据id到数组中找到相同的id并删除
-      // const index = this.dataList.findIndex(item => item.id === id)
-      // console.log(res)
+      console.log(id)
       try {
         await this.$confirm('是否删除', {
+          title: '提示',
           confirmButtonText: '确认',
-          cancelButtonText: '取消'
+          cancelButtonText: '取消',
+          type: 'error'
         })
-        // 删除
-        // this.dataList.splice(index, 1)
-        await this.delRandomsById(id)
+        await delRandomsById(id)
         await this.getRandomsList()
-        Message.success('删除成功')
+        Message.success('数据删除成功')
       } catch (error) {
         Message.info('取消了删除操作')
       }
@@ -230,6 +226,9 @@ export default {
     changeCurrent (val) {
       this.page.page = val
       this.getRandomsList(this.page)
+    },
+    getQuestionID (id) {
+      console.log(id)
     }
   }
 }
@@ -253,6 +252,15 @@ export default {
       display: flex;
       justify-content: flex-end;
     }
+  }
+
+  .el-pagination {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+  }
+  .headerTop {
+    margin-bottom: 20px;
   }
 }
 </style>

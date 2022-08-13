@@ -40,6 +40,11 @@ export function parseTime (time, cFormat) {
   return timeStr
 }
 
+// 过滤枚举类型
+export function findDifficultyType (num, data) {
+  return data.filter(item => item.value === num - 0)[0]?.label
+}
+
 /**
  * 格式化时间
  *
