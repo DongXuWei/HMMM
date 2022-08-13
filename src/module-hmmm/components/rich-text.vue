@@ -7,7 +7,6 @@ import Quill from 'quill'
 import 'quill/dist/quill.snow.css'
 import hljs from 'highlight.js'
 import 'highlight.js/styles/monokai-sublime.css'
-
 export default {
   watch: {
     value (newVal) {
@@ -99,6 +98,10 @@ export default {
 
               // 链接按钮需选中文字后点击
 
+              // [{ 'header': 1 }, { 'header': 2 }], // 标题 —— 独立平铺
+              // [{ header: [1, 2, 3, 4, 5, 6, false] }], // 标题 —— 下拉选择
+              // [{ size: ['small', false, 'large', 'huge'] }], // 字体大小
+              // 链接按钮需选中文字后点击
               // [{ align: [] }], // 对齐方式// text direction
               // [{ indent: '-1' }, { indent: '+1' }], // 缩进
               // [{ color: [] }, { background: [] }], // 字体颜色、字体背景颜色
@@ -205,11 +208,21 @@ export default {
   }
 }
 </script>
-<style>
+
+<style lang="scss">
 .ql-snow {
   height: 34px;
   display: flex;
   align-items: center;
+}
+
+.el-form-item__content{
+  .ql-toolbar{
+    height: 40px;
+    display: flex;
+    align-items: center;
+  }
+
 }
 .ql-snow .ql-tooltip[data-mode="link"]::before {
   content: "请输入链接地址:";
@@ -219,6 +232,10 @@ export default {
   border-right: 0px;
   content: "保存";
   padding-right: 0px;
+}
+
+.ql-snow .ql-tooltip[data-mode="video"]::before {
+  content: "请输入视频地址:";
 }
 
 .ql-snow .ql-tooltip[data-mode="video"]::before {
@@ -289,9 +306,16 @@ export default {
   font-family: "SimSun";
 }
 
+.ql-font-SimSun {
+  font-family: "SimSun";
+}
 .ql-snow .ql-picker.ql-font .ql-picker-label[data-value="SimHei"]::before,
 .ql-snow .ql-picker.ql-font .ql-picker-item[data-value="SimHei"]::before {
   content: "黑体";
+}
+
+.ql-font-SimHei {
+  font-family: "SimHei";
 }
 
 .ql-font-SimHei {
@@ -311,9 +335,17 @@ export default {
   font-family: "Microsoft YaHei";
 }
 
+.ql-font-Microsoft-YaHei {
+  font-family: "Microsoft YaHei";
+}
+
 .ql-snow .ql-picker.ql-font .ql-picker-label[data-value="KaiTi"]::before,
 .ql-snow .ql-picker.ql-font .ql-picker-item[data-value="KaiTi"]::before {
   content: "楷体";
+}
+
+.ql-font-KaiTi {
+  font-family: "KaiTi";
 }
 
 .ql-font-KaiTi {

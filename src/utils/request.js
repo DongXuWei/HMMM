@@ -3,13 +3,13 @@ import { Message } from 'element-ui'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
 
-// create an axios instance
+// 创建一个axios实例
 const instance = axios.create({
   baseURL: 'http://127.0.0.1:1024',
   timeout: 5000 // 超时时间
 })
 
-// request interceptor
+// 请求拦截器
 instance.interceptors.request.use(
   config => {
     // Do something before request is sent
@@ -25,7 +25,7 @@ instance.interceptors.request.use(
   }
 )
 
-// respone interceptor
+// 响应拦截器
 instance.interceptors.response.use(
   response => response,
   /**

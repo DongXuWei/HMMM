@@ -7,6 +7,13 @@
  * 目录
  */
 
+// import createAPI from '@/utils/request'
+
+// // 目录列表
+// export const list = data => createAPI('/direcotrys', 'get', data)
+
+// // 目录简单列表
+// export const simple = data => createAPI('/direcotrys', 'post')
 // 目录列表
 import { createAPI } from '@/utils/request'
 export const list = data => createAPI('/direcotrys', 'get', data)
@@ -16,6 +23,9 @@ export const getContentList = data => createAPI('/directorys', 'get', data)
 
 // 目录简单列表
 export const simple = data => createAPI('/direcotrys', 'post')
+
+// 目录简单列表
+export const directorysSimple = subjectID => createAPI(`/tags/simple?subjectID=${subjectID}`, 'GET')
 
 // 目录详情
 export const detail = data =>
