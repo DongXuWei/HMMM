@@ -38,24 +38,41 @@
       <hr>
       <el-row>
         <el-row>
-          【题干】:<span>{{ formMyData(detailData.question) }}</span>
+          <el-button type="primary" plain circle size="mini" class="btnTip">{{typeSelect(detailData.questionType)}}</el-button>
+          <span>{{ formMyData(detailData.question) }}</span>
         </el-row>
-        <el-row>选项：（以下选中的选项为正确答案）</el-row>
+        <el-row>
+          <!-- 选项：（以下选中的选项为正确答案） -->
+          <!-- 单选 -->
+
+          <el-radio-group :value="correctValue" v-if="detailData.questionType === '1'">
+            <el-radio v-for="item in detailData.options" :key="item.code" :label="item.isRight">{{ item.title }}
+            </el-radio>
+          </el-radio-group>
+
+          <!-- 多选 -->
+
+          <el-checkbox-group v-else-if="detailData.questionType === '2'" :value="mulcorrectValue">
+            <el-checkbox v-for="item in detailData.options" :key="item.code" :label="item.isRight">{{ item.title }}
+            </el-checkbox>
+          </el-checkbox-group>
+
+          <!-- 简答 -->
+          <el-row v-else-if="detailData.questionType === '3'">
+            <span>{{ formMyData(detailData.answer) }}</span>
+          </el-row>
+
+        </el-row>
       </el-row>
       <hr>
       <el-row class="answer">
         【参考答案】：
         <el-button icon="el-icon-video-camera" type="success" round @click="showVideoFn">视频答案预览</el-button>
         <div class="demo">
-      <video-player
-        v-if="showVideo"
-        class="video-player vjs-custom-skin"
-        ref="videoPlayer"
-        :playsinline="true"
-        :options="playerOptions"
-      >
-      </video-player>
-    </div>
+          <video-player v-if="showVideo" class="video-player vjs-custom-skin" ref="videoPlayer" :playsinline="true"
+            :options="playerOptions">
+          </video-player>
+        </div>
 
       </el-row>
       <hr>
@@ -82,6 +99,11 @@ export default {
       type: Object,
       required: true,
       default: () => { }
+    },
+    answerList: {
+      type: Array,
+      required: true,
+      default: () => []
     }
   },
   data () {
@@ -116,9 +138,18 @@ export default {
           remainingTimeDisplay: false, // 是否显示剩余时间功能
           fullscreenToggle: true // 全屏按钮
         }
-      }
+      },
 
+      // 单选 正确答案为1
+      correctValue: 1,
+
+      // 多选正确答案
+      mulcorrectValue: [1]
     }
+  },
+  // 计算属性
+  computed: {
+
   },
   methods: {
 
@@ -126,6 +157,18 @@ export default {
     showVideoFn () {
       this.playerOptions.sources.src = this.detailData.videoURL
       this.showVideo = true
+    },
+    // 题目类型
+    typeSelect (val) {
+      var questionType = null
+      if (val === '1') {
+        questionType = '单选'
+      } else if (val === '2') {
+        questionType = '多选'
+      } else {
+        questionType = '简答'
+      }
+      return questionType
     },
 
     //
@@ -140,6 +183,9 @@ export default {
 </script>
 
 <style scoped lang='less'>
+.btnTip{
+  margin-right: 20px;
+}
 .que_type1 {
   margin: 15px 0 30px;
 }

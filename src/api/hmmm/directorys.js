@@ -28,18 +28,18 @@ export const simple = data => createAPI('/direcotrys', 'post')
 export const directorysSimple = subjectID => createAPI(`/tags/simple?subjectID=${subjectID}`, 'GET')
 
 // 目录详情
-export const detail = data =>
-  createAPI(`/direcotrys/${data.userId}`, 'get', data)
+export const getContentDetail = id =>
+  createAPI(`/directorys/${id}`, 'get')
 
 // 目录添加
-export const add = data => createAPI('/direcotrys', 'post', data)
+export const addContent = data => createAPI('/directorys', 'post', data)
 
 // 目录修改
-export const update = data => createAPI(`/direcotrys/${data.id}`, 'put', data)
+export const updateContent = data => createAPI(`/directorys/${data.id}`, 'put', data)
 
 // 目录删除
-export const remove = data =>
+export const removeContent = data =>
   createAPI(`/directorys/${data.id}`, 'delete', data)
 
 // 目录状态
-export const changeState = data => createAPI(`/directorys/${data.id}`, 'get')
+export const changeState = data => createAPI(`/directorys/${data.id}/${data.state}`, 'post', data)
