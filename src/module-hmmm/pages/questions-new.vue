@@ -438,7 +438,7 @@ export default {
 .container {
   .col {
     height: 100%;
-    padding: 20px;
+    padding: 10px;
     border-radius: 10px;
   }
   .select {
