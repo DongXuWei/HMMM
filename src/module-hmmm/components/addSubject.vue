@@ -40,6 +40,17 @@ export default {
       }
     }
   },
+  watch: {
+    formData: {
+      deep: true,
+      immediate: true,
+      handler (newVal, oldVal) {
+        if (newVal.isFrontDisplay === 1) {
+          newVal.isFrontDisplay = true
+        }
+      }
+    }
+  },
   computed: {
     showTitle () {
       return this.formData.id ? '修改学科' : '新增学科'
