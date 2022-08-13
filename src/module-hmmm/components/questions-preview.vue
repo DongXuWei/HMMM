@@ -38,7 +38,7 @@
       <hr>
       <el-row>
         <el-row>
-          <el-button type="primary" plain circle size="mini" class="btnTip">简答</el-button>
+          <el-button type="primary" plain circle size="mini" class="btnTip">{{typeSelect(detailData.questionType)}}</el-button>
           <span>{{ formMyData(detailData.question) }}</span>
         </el-row>
         <el-row>
@@ -161,15 +161,12 @@ export default {
     // 题目类型
     typeSelect (val) {
       var questionType = null
-      switch (val) {
-        case 1:
-          questionType = '单选'
-          break
-        case 2:
-          questionType = '多选'
-          break
-        case 3:
-          questionType = '简答'
+      if (val === '1') {
+        questionType = '单选'
+      } else if (val === '2') {
+        questionType = '多选'
+      } else {
+        questionType = '简答'
       }
       return questionType
     },
