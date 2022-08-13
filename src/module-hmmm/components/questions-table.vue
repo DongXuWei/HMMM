@@ -35,8 +35,8 @@
           <el-button type="text" size="small" @click="openPreview(row.id)">预览</el-button>
           <el-button type="text" size="small" :disabled="row.chkState > 0" @click="showCheckFn(row.id)">审核</el-button>
           <el-button type="text" size="small">修改</el-button>
-          <el-button type="text" size="small" v-if="row.publishState === 1">上架</el-button>
-          <el-button type="text" size="small" v-if="row.publishState === 0">下架</el-button>
+          <el-button type="text" size="small" v-if="row.publishState === 1" @click="editPubState(row.id,row.publishState)">上架</el-button>
+          <el-button type="text" size="small" v-if="row.publishState === 0" @click="editPubState(row.id,row.publishState)">下架</el-button>
           <el-button type="text" size="small" @click="delMyquestion(row.id)">删除</el-button>
         </template>
       </el-table-column>
@@ -78,7 +78,7 @@
 </template>
 
 <script>
-import { setChoice, editDataCheck, getQuestionDetail, delQuestions } from '@/api/hmmm/questions.js'
+import { setChoice, editDataCheck, getQuestionDetail, delQuestions, editPublishState } from '@/api/hmmm/questions.js'
 import { formatDate, html2Text } from '@/utils/index.js'
 import { questionType, difficulty, chkType, publishType } from '@/api/hmmm/constants.js'
 // 预览框
@@ -180,6 +180,28 @@ export default {
         this.$message.success('删除成功')
         // 删除成功 重新获取数据
         this.$emit('updateTable')
+      } catch (error) {
+        console.log(error)
+      }
+    },
+
+    // 上下架问题处理
+    async editPubState (id, pubState) {
+      try {
+        // 1代表着上架 这时我们想要下架 所以 提示文本为 下架
+        const stateTEXT = pubState === 1 ? '下架' : '上架'
+        pubState = pubState === 1 ? 0 : 1
+        // 确认执行上下架操作 的提示窗
+        await this.$confirm(`确定要${stateTEXT}吗？`, '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消'
+        })
+        // 发送操作 请求
+        await editPublishState(id, pubState)
+
+        // 重新获取数据
+        this.$emit('updateTable')
+        //
       } catch (error) {
         console.log(error)
       }

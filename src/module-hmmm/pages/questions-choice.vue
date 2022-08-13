@@ -232,7 +232,7 @@
           :title="`数据一共${pageInfo.counts}条`"
           type="info"
         ></el-alert>
-        <questions-table :tableData="tableData" :start="true" @updateChoiceData="acqQuestionsList"></questions-table>
+        <questions-table :tableData="tableData" :start="true" @updateTable="acqQuestionsList"></questions-table>
         <!-- 表格下的分页 -->
         <el-row class="pagination" type="flex" justify="end">
           <el-pagination
@@ -255,7 +255,7 @@
           :title="`数据一共${pageInfo.counts}条`"
           type="info"
         ></el-alert>
-        <questions-table :tableData="tableData" :start="true" @updateChoiceData="acqQuestionsList"></questions-table>
+        <questions-table :tableData="tableData" :start="true" @updateTable="acqQuestionsList"></questions-table>
         <!-- 表格下的分页 -->
         <el-row class="pagination" type="flex" justify="end">
           <el-pagination
@@ -277,7 +277,7 @@
           :title="`数据一共${pageInfo.counts}条`"
           type="info"
         ></el-alert>
-        <questions-table :tableData="tableData" :start="true" @updateChoiceData="acqQuestionsList"></questions-table>
+        <questions-table :tableData="tableData" :start="true" @updateTable="acqQuestionsList"></questions-table>
         <!-- 表格下的分页 -->
         <el-row class="pagination" type="flex" justify="end">
           <el-pagination
@@ -390,8 +390,8 @@ export default {
         page: 1,
         counts: 0,
         // 当前页限制数据数量
-        pagesize: 10,
-        chkState: ''
+        pagesize: 10
+
       }
     }
   },
@@ -403,6 +403,17 @@ export default {
     }
   },
   methods: {
+
+    // 获取 精选题库列表s
+
+    // 获取 题库数据
+    async acqQuestionsList (val) {
+      const { data } = await getQuestionsChoiceList(val)
+      debugger
+      this.tableData = data.items
+      this.pageInfo.counts = data.counts
+      delete this.pageInfo.chkState
+    },
 
     //
     // 检查 搜索时 所需参数是否存在
@@ -431,14 +442,6 @@ export default {
       } else {
         this.acqQuestionsList({ ...this.pageInfo, chkState: val.name === 'all' ? null : val.name })
       }
-    },
-    // 获取 精选题库列表s
-
-    // 获取 题库数据
-    async acqQuestionsList (val) {
-      const { data } = await getQuestionsChoiceList(val)
-      this.tableData = data.items
-      this.pageInfo.counts = data.counts
     },
 
     // 分页 的方法
