@@ -409,10 +409,9 @@ export default {
     // 获取 题库数据
     async acqQuestionsList (val) {
       const { data } = await getQuestionsChoiceList(val)
-      debugger
       this.tableData = data.items
       this.pageInfo.counts = data.counts
-      delete this.pageInfo.chkState
+      // delete this.pageInfo.chkState
     },
 
     //
@@ -429,16 +428,24 @@ export default {
       if (!this.questionsList.subjectID && !this.questionsList.keyword.trim()) {
         return false
       }
+      console.log(obj)
       return obj
     },
 
     // 选中 tabs 标签时触发的函数
     tabsClick (val) {
+      this.pageInfo = {
+        page: 1,
+        counts: 0,
+        // 当前页限制数据数量
+        pagesize: 10
+
+      }
       this.pageInfo.chkState = val.name === 'all' ? null : val.name
 
       const checkState = this.checkIsNull()
       if (checkState) {
-        this.acqQuestionsList(this.pageInfo)
+        this.acqQuestionsList(checkState)
       } else {
         this.acqQuestionsList({ ...this.pageInfo, chkState: val.name === 'all' ? null : val.name })
       }

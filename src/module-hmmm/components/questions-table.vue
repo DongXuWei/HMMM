@@ -73,7 +73,7 @@
     </el-dialog>
 
     <!-- 预览弹窗 -->
-    <previewDialog :isShow="showPreview" @closeFn="closePreview" :detailData="questionDetail"></previewDialog>
+    <previewDialog :isShow="showPreview" @closeFn="closePreview" :detailData="questionDetail" :answerList="answerList"></previewDialog>
   </div>
 </template>
 
@@ -125,7 +125,10 @@ export default {
       showPreview: false,
 
       // 获取的题目详情
-      questionDetail: {}
+      questionDetail: {},
+
+      // 处理获取的 选项数据
+      answerList: []
     }
   },
 
@@ -160,6 +163,7 @@ export default {
     async openPreview (id) {
       const { data } = await getQuestionDetail(id)
       this.questionDetail = data
+      this.answerList = data.options.filter(item => { return item.isRight === 1 })
       this.showPreview = true
       console.log(data)
     },
