@@ -1,5 +1,3 @@
-<<<<<<< Updated upstream
-=======
 <template>
   <div class="container">
     <el-row>
@@ -401,4 +399,3 @@ export default {
   }
 }
 </style>
->>>>>>> Stashed changes
